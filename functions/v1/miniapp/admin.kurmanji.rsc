@@ -1,0 +1,125 @@
+1:"$Sreact.fragment"
+7:I[7150,[],""]
+:HL["/functions/v1/miniapp/_next/static/media/1abbc144918f74fd-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/functions/v1/miniapp/_next/static/media/fb12bdfc6f99d938-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/functions/v1/miniapp/_next/static/css/e7e2028186f9119a.css","style"]
+2:T10fb,window.__KC_BP="/functions/v1/miniapp";window.__KC_RB="https://bpfdsobekqkeeijeqsoo.supabase.co/functions/v1/miniapp";(function () {
+  if (window.__kcMiniappShim) return;
+  var BASE_PATH = window.__KC_BP || '';
+  var RUNTIME_BASE = window.__KC_RB || '';
+  if (!BASE_PATH && !RUNTIME_BASE) return;
+  window.__kcMiniappShim = true;
+
+  function isRscRequest(url, init, requestHeaders) {
+    try {
+      if (/[?&]_rsc=/.test(String(url))) return true;
+      var headers = (init && init.headers) || null;
+      if (headers) {
+        if (typeof headers.get === 'function' && headers.get('rsc')) return true;
+        if (headers['Rsc'] || headers['rsc'] || headers['RSC']) return true;
+      }
+      if (requestHeaders && typeof requestHeaders.get === 'function' && requestHeaders.get('rsc')) return true;
+    } catch (error) { /* fall through */ }
+    return false;
+  }
+
+  // Normalises fetch inputs to same-origin paths: document-origin absolute
+  // URLs (Request#url is always absolute) become paths so the rewrite rules
+  // can see them; foreign origins pass through untouched.
+  function toSameOriginPath(url) {
+    if (typeof url !== 'string') return url;
+    if (/^https?:\/\//i.test(url)) {
+      try {
+        var abs = new URL(url);
+        if (abs.origin === window.location.origin) return abs.pathname + abs.search;
+      } catch (error) { /* malformed — leave as-is */ }
+      return url;
+    }
+    return url;
+  }
+
+  function rewrite(url, init, requestHeaders) {
+    var path = typeof url === 'string' ? toSameOriginPath(url) : url;
+    if (typeof path !== 'string' || path.charAt(0) !== '/' || path.indexOf('//') === 0) return path;
+    // API traffic always goes to the edge runtime (cross-origin, CORS).
+    if (RUNTIME_BASE && path.indexOf('/api/') === 0) return RUNTIME_BASE + path;
+    // RSC/flight traffic goes to the runtime as well: the document host can
+    // only answer HTML, and text/x-component passes the Supabase gateway.
+    if (RUNTIME_BASE && isRscRequest(path, init, requestHeaders)) {
+      return RUNTIME_BASE + (path.indexOf(BASE_PATH) === 0 ? path.slice(BASE_PATH.length) : path);
+    }
+    // Everything else keeps the basePath (pages/assets on the document host).
+    return BASE_PATH ? BASE_PATH + path : path;
+  }
+
+  var originalFetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    try {
+      if (typeof input === 'string') {
+        return originalFetch(rewrite(input, init), init);
+      }
+      // URL-object inputs: Next.js's router prefetches pass new URL(...) —
+      // normalise to the href string so the rewrite rules can see it.
+      if (input && typeof input === 'object' && typeof input.href === 'string') {
+        var href = rewrite(input.href, init);
+        if (href !== input.href) {
+          return originalFetch(href, init);
+        }
+        return originalFetch(input, init);
+      }
+      if (typeof Request !== 'undefined' && input instanceof Request) {
+        var rewritten = rewrite(input.url, init, input.headers);
+        if (rewritten !== input.url && (input.method === 'GET' || input.method === 'HEAD')) {
+          // Router/RSC fetches are body-less GETs: rebuilding via init (not a
+          // Request clone) avoids inheriting a same-origin mode on the new
+          // cross-origin URL. Bodied requests fall through untouched.
+          return originalFetch(rewritten, {
+            method: input.method,
+            headers: input.headers,
+            signal: input.signal,
+            mode: 'cors'
+          });
+        }
+      }
+    } catch (error) { /* fall through to the untouched call */ }
+    return originalFetch(input, init);
+  };
+
+  if (typeof XMLHttpRequest !== 'undefined') {
+    var originalOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function (method, url) {
+      var target = typeof url === 'string' ? toSameOriginPath(url) : url;
+      if (typeof target === 'string' && target.charAt(0) === '/' && target.indexOf('//') !== 0) {
+        target = (RUNTIME_BASE && target.indexOf('/api/') === 0)
+          ? RUNTIME_BASE + target
+          : (BASE_PATH ? BASE_PATH + target : target);
+        var rest = Array.prototype.slice.call(arguments, 2);
+        return originalOpen.apply(this, [method, target].concat(rest));
+      }
+      return originalOpen.apply(this, arguments);
+    };
+  }
+})();0:{"P":null,"b":"Pu9BifSPENZREfcTPyL5M","p":"/functions/v1/miniapp","c":["","admin"],"i":false,"f":[[["",{"children":["admin",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/functions/v1/miniapp/_next/static/css/e7e2028186f9119a.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"fa","dir":"rtl","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n(function () {\n  try {\n    var valid = { olive: true, day: true, dark: true, pink: true };\n    var saved = window.localStorage.getItem('kc-theme');\n    var theme = valid[saved] ? saved : null;\n    if (!theme) {\n      var params = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.themeParams;\n      var bg = params && params.bg_color;\n      if (bg && /^#[0-9a-f]{6}$/i.test(bg)) {\n        var rgb = bg.slice(1).match(/.{2}/g).map(function (part) { return parseInt(part, 16); });\n        var luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;\n        theme = luminance < 0.48 ? 'dark' : 'day';\n      }\n    }\n    document.documentElement.dataset.theme = theme || 'olive';\n  } catch (error) {\n    document.documentElement.dataset.theme = 'olive';\n  }\n})();\n"}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$2"}}]]}],"$L3"]}]]}],{"children":["admin","$L4",{"children":["__PAGE__","$L5",{},null,false]},null,false]},null,false],"$L6",false]],"m":"$undefined","G":["$7",[]],"s":false,"S":true}
+8:I[1402,["619","static/chunks/619-ba102abea3e3d0e4.js","177","static/chunks/app/layout-237575fd6026482d.js"],""]
+9:I[7912,["619","static/chunks/619-ba102abea3e3d0e4.js","177","static/chunks/app/layout-237575fd6026482d.js"],"default"]
+a:I[4157,["619","static/chunks/619-ba102abea3e3d0e4.js","177","static/chunks/app/layout-237575fd6026482d.js"],"default"]
+b:I[9766,[],""]
+c:I[8924,[],""]
+d:I[7409,["619","static/chunks/619-ba102abea3e3d0e4.js","177","static/chunks/app/layout-237575fd6026482d.js"],"default"]
+e:I[9693,["619","static/chunks/619-ba102abea3e3d0e4.js","698","static/chunks/app/admin/page-600fe19e04f2a2ca.js"],"default"]
+f:I[2619,["619","static/chunks/619-ba102abea3e3d0e4.js","698","static/chunks/app/admin/page-600fe19e04f2a2ca.js"],"*"]
+10:I[5523,["619","static/chunks/619-ba102abea3e3d0e4.js","698","static/chunks/app/admin/page-600fe19e04f2a2ca.js"],"default"]
+11:I[4431,[],"OutletBoundary"]
+13:I[5278,[],"AsyncMetadataOutlet"]
+15:I[4431,[],"ViewportBoundary"]
+17:I[4431,[],"MetadataBoundary"]
+18:"$Sreact.suspense"
+3:["$","body",null,{"className":"__variable_d4e4c3 __variable_b88586","children":[["$","$L8",null,{"src":"https://telegram.org/js/telegram-web-app.js","strategy":"beforeInteractive"}],["$","$L9",null,{"children":[["$","main",null,{"className":"shell","children":[["$","header",null,{"className":"topbar","children":[["$","div",null,{"className":"brand","children":[["$","span",null,{"className":"brand__name","children":"KurdishCopilot"}],["$","span",null,{"className":"brand__tag","children":"مدرس صوتی سورانی و کرمانجی"}]]}],["$","span",null,{"className":"dialect-pill","children":"دو گویش فعال"}]]}],["$","$La",null,{"children":["$","$Lb",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lc",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]]}],["$","$Ld",null,{}]]}]]}]
+4:["$","$1","c",{"children":[null,["$","$Lb",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lc",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+5:["$","$1","c",{"children":[[["$","$Le",null,{"screen":"admin"}],["$","section",null,{"className":"hero","style":{"paddingBottom":8},"children":[["$","div",null,{"className":"card__eyebrow","children":"پنل مدیر KurdishCopilot"}],["$","h1",null,{"style":{"fontSize":"2rem"},"children":"کنترل کیفیت و عملیات"}],["$","p",null,{"children":"پایش کاربران، کش صوتی، سهمیهٔ سرویس‌ها و محتوای آمادهٔ انتشار، تنها برای مدیران تأییدشده."}]]}],["$","$Lf",null,{"href":"/render","className":"card","style":{"display":"flex","alignItems":"center","gap":14,"padding":"16px 18px","textDecoration":"none"},"children":[["$","span",null,{"style":{"fontSize":30},"aria-hidden":true,"children":"🎬"}],["$","span",null,{"children":[["$","strong",null,{"style":{"display":"block"},"children":"استودیو رندر ویدیو"}],["$","span",null,{"style":{"opacity":0.7,"fontSize":13},"children":"ساخت ویدیوی آموزشی فارسی ← کردی با گویندگی دو زبانه و تحویل دایرکت — برو به استودیو"}]]}],["$","span",null,{"style":{"marginInlineStart":"auto","fontSize":18},"aria-hidden":true,"children":"←"}]]}],["$","$L10",null,{}],["$","section",null,{"className":"card","style":{"marginTop":14},"children":[["$","div",null,{"className":"card__eyebrow","children":"خط‌مشی انتشار"}],["$","h2",null,{"children":"کنترل انسانی پیش از انتشار"}],["$","p",null,{"children":"هر محتوای منتخب قبل از انتشار باید از فیلتر ایمنی عبور کند و سپس توسط مدیر تأیید شود."}]]}]],null,["$","$L11",null,{"children":["$L12",["$","$L13",null,{"promise":"$@14"}]]}]]}]
+6:["$","$1","h",{"children":[null,[["$","$L15",null,{"children":"$L16"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$L17",null,{"children":["$","div",null,{"hidden":true,"children":["$","$18",null,{"fallback":null,"children":"$L19"}]}]}]]}]
+16:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+12:null
+1a:I[622,[],"IconMark"]
+14:{"metadata":[["$","title","0",{"children":"KurdishCopilot | مدرس صوتی کردی"}],["$","meta","1",{"name":"description","content":"مینی‌اپ آموزشی سورانی و کرمانجی در تلگرام"}],["$","link","2",{"rel":"icon","href":"/functions/v1/miniapp/icon.svg?8cea87890adb1c42","type":"image/svg+xml","sizes":"any"}],["$","$L1a","3",{}]],"error":null,"digest":"$undefined"}
+19:"$14:metadata"
